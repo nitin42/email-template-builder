@@ -1,0 +1,12 @@
+[ignore]
+.*/node_modules/.*
+.*/public/.*
+.*/node_modules/prop-types/.*
+
+[include]
+.*/node_modules/styled-components/.*
+
+[libs]
+
+
+[options]
