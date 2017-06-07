@@ -56,6 +56,8 @@ const Show = styled.div`
   height: 650px;
   border: 1px solid #000;
   margin: 30px auto;
+  overflow-x: auto;
+  overflow-y: auto;
 `;
 
 export {

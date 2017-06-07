@@ -7,12 +7,10 @@ import { FadeIn } from "animate-components";
 import One from "./One";
 import Two from "./Two";
 
-import { Show } from "../styles";
-
 type Props = {
   show: string,
-  drag: boolean,
-}
+  drag: boolean
+};
 
 export default class Options extends Component<Props> {
   static displayName = "Options";
@@ -27,16 +25,11 @@ export default class Options extends Component<Props> {
 
     return (
       <div>
-        {drag
-          ? <h1 style={{ fontSize: "2.2em" }}>Create an Email template</h1>
-          : null}
-        <Show>
-          {show === "One"
-            ? <FadeIn duration="2s"><One drag={drag} /></FadeIn>
-            : show === "Two"
-                ? <FadeIn duration="2s"><Two drag={drag} /></FadeIn>
-                : <One drag={drag} />}
-        </Show>
+        {show === "One"
+          ? <FadeIn duration="2s"><One drag={drag} /></FadeIn>
+          : show === "Two"
+              ? <FadeIn duration="2s"><Two drag={drag} /></FadeIn>
+              : <One drag={drag} />}
       </div>
     );
   }

@@ -7,12 +7,16 @@ import { StyledHome } from "../styles";
 export default class Home extends Component {
   static displayName = "Home";
 
-  render () {
+  render() {
     return (
       <FadeIn duration="5s" as="div">
         <StyledHome>
           <h1
-            style={{ fontSize: "1.4em", marginTop: "10px", marginBottom: "15px" }}
+            style={{
+              fontSize: "1.4em",
+              marginTop: "10px",
+              marginBottom: "15px"
+            }}
           >
             Email form template builder
           </h1>

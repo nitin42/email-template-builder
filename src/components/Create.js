@@ -7,7 +7,7 @@ import Options from "./Options";
 import { StyledCreate } from "../styles";
 
 type Props = {
-  layout: string,
+  layout: string
 };
 
 export default class Create extends Component<Props> {

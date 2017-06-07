@@ -4,11 +4,14 @@ import React, { Component } from "react";
 import Draggable from "react-draggable";
 import Dropzone from "react-dropzone";
 import PropTypes from "prop-types";
+import RichTextEditor, { createEmptyValue } from "react-rte";
 
-import Created from "./Created";
+import type { EditorValue } from "react-rte";
+
+import Button from "./Button";
 
 import HOC from "./HOC";
-import { Placeholder } from "../styles";
+import { Placeholder, Show } from "../styles";
 
 type Props = {
   drag: string,
@@ -17,11 +20,19 @@ type Props = {
   value: string,
   handleChange: Function,
   content: string,
-  onHandleChange: Function,
+  onHandleChange: Function
 };
 
 class One extends Component<Props> {
   static displayName = "One";
+
+  state = {
+    value: createEmptyValue(),
+    format: "html",
+    readOnly: false,
+    file: "",
+    imagePreviewUrl: ""
+  };
 
   static propTypes = {
     drag: PropTypes.bool,
@@ -33,6 +44,26 @@ class One extends Component<Props> {
     onHandleChange: PropTypes.func
   };
 
+  _onChange = (value: EditorValue) => {
+    this.setState({ value });
+  };
+
+  _onChangeSource = (event: Object) => {
+    let source = event.target.value;
+    let oldValue = this.state.value;
+    this.setState({
+      value: oldValue.setContentFromString(source, this.state.format)
+    });
+  };
+
+  _onChangeFormat = (event: Object) => {
+    this.setState({ format: event.target.value });
+  };
+
+  _onChangeReadOnly = (event: Object) => {
+    this.setState({ readOnly: event.target.checked });
+  };
+
   render() {
     const {
       drag,
@@ -40,55 +71,91 @@ class One extends Component<Props> {
       files,
       value,
       handleChange,
-      content,
-      onHandleChange
     } = this.props;
 
     return (
       <div>
         {drag
           ? <div>
-              <Dropzone onDrop={onDrop} style={{ padding: "10px" }}>
-                <Placeholder src="http://i.imgur.com/0FixUvM.png" />
-                <p>
-                  {files.map(f => (
-                    <li key={f.name}>{f.name} - {f.size} bytes</li>
-                  ))}
-                </p>
-              </Dropzone>
-            </div>
-          : <Placeholder src="http://i.imgur.com/0FixUvM.png" drag />}
-        {drag
-          ? <div>
-              <Draggable
-                bounds={{ top: -19, left: -10, right: 575, bottom: 10 }}
+              <Show>
+                <Draggable>
+                  <div>
+                    <Dropzone onDrop={onDrop} style={{ padding: "10px" }}>
+                      <Placeholder
+                        src={
+                          files.length !== 0
+                            ? files.map(f => f.preview)
+                            : "http://i.imgur.com/0FixUvM.png"
+                        }
+                      />
+                    </Dropzone>
+                  </div>
+                </Draggable>
+                <Draggable>
+                  <div>
+                    <input
+                      className="title"
+                      value={value}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </Draggable>
+                <Draggable>
+                  <div>
+                    <RichTextEditor
+                      value={this.state.value}
+                      onChange={this._onChange}
+                      className="editor"
+                      placeholder="Text will appear here. Start typing in the box given below"
+                      toolbarClassName="demo-toolbar"
+                      editorClassName="demo-editor"
+                      readOnly={true}
+                    />
+                  </div>
+                </Draggable>
+                <br />
+              </Show>
+              <div
+                style={{
+                  margin: "30px auto",
+                  width: "800px",
+                  overflow: "auto"
+                }}
               >
-                <div>
-                  <input
-                    className="title"
-                    value={value}
-                    onChange={handleChange}
-                  />
-                </div>
-              </Draggable>
-              <Draggable bounds={{ top: -24, left: -10, right: 8, bottom: 15 }}>
-                <div>
-                  <textarea
-                    className="editor"
-                    value={content}
-                    onChange={onHandleChange}
-                  />
-                </div>
-              </Draggable>
-              <br /><Created page="One" value={value} content={content} /><br />
+                <h1 style={{ fontSize: "1.5em", marginBottom: "10px" }}>
+                  Start typing here and content will appear above. Note it supports plain text and also html.
+                </h1>
+                <textarea
+                  className="textarea"
+                  placeholder="Editor Source"
+                  value={this.state.value.toString("html")}
+                  onChange={this._onChangeSource}
+                  autoFocus
+                />
+              </div>
+              <Button />
             </div>
           : <div>
-              <h1 style={{ fontSize: "1.6em", padding: "10px" }}>
-                Email Title
-              </h1>
-              <p style={{ fontSize: "0.9em", padding: "10px" }}>
-                {content}
-              </p>
+              <Show>
+                <Placeholder
+                  style={{ padding: "10px" }}
+                  src={
+                    files.length !== 0
+                      ? files.map(f => f.preview)
+                      : "http://i.imgur.com/0FixUvM.png"
+                  }
+                />
+                <input className="title" value={value} readOnly />
+                <RichTextEditor
+                  value={this.state.value}
+                  onChange={this._onChange}
+                  className="editor"
+                  placeholder="Write the email content here..."
+                  toolbarClassName="demo-toolbar"
+                  editorClassName="demo-editor"
+                  readOnly={true}
+                />
+              </Show>
             </div>}
       </div>
     );

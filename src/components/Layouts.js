@@ -9,7 +9,7 @@ import { Container } from "../styles";
 
 type State = {
   layouts: Array<string>,
-  current: string,
+  current: string
 };
 
 export default class Layouts extends Component<State> {
